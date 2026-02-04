@@ -10,7 +10,7 @@ class Layer:
         self._bias: np.ndarray = np.zeros(output_dim)
         
     def __call__(self, X: np.ndarray) -> np.ndarray:
-        return (X @ self._weights) #+ self.bias
+        return (X @ self._weights) + self._bias
         
     @property
     def weights(self):
