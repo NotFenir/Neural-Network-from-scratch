@@ -13,9 +13,9 @@ class Layer:
         return (X @ self._weights) + self._bias
         
     @property
-    def weights(self):
+    def weights(self) -> np.ndarray:
         return self._weights
     
     @property
-    def bias(self):
+    def bias(self) -> np.ndarray:
         return self._bias
