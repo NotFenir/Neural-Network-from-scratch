@@ -23,15 +23,19 @@ def validate_data(predicted: Input, target: Input) -> tuple[Input, Input]:
 
 def validate_data_type(x: Input):
     if not isinstance(x, ALLOWED_INPUT_TYPES):
-        expected = ", ".join(t._name__ for t in ALLOWED_INPUT_TYPES)
+        expected = ", ".join(t.__name__ for t in ALLOWED_INPUT_TYPES)
         raise TypeError(f"Argument must be {expected}. Got {type(x).__name__}")
 
     if isinstance(x, np.ndarray):
         return x
-    if isinstance(x, float):
+    if isinstance(x, (float, int)):
         return x
     if isinstance(x, (tuple, list)):
         return np.array(x)
+
+    raise NotImplementedError(
+        f"There is no implemented solution for this type! Got {type(x).__name__}"
+    )
 
 
 def check_data_types(predicted: Input, target: Input) -> bool:
@@ -47,7 +51,7 @@ def is_data_length_same(predicted: Input, target: Input) -> bool:
 
     if isinstance(predicted, np.ndarray):
         return predicted.shape == target.shape
-    if isinstance(predicted, float):
+    if isinstance(predicted, (float, int)):
         return True
     if isinstance(predicted, (tuple, list)):
         return len(predicted) == len(target)
