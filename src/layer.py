@@ -8,8 +8,6 @@ class Layer:
     Docstring for Layer
     """
 
-    __array_ufunc__ = None
-
     def __init__(self, input_dim: int, output_dim: int, activation: str = None) -> None:
         super().__init__()
         self._weights: np.ndarray = np.random.randn(input_dim, output_dim) * np.sqrt(
@@ -20,10 +18,7 @@ class Layer:
 
     def __call__(self, X: Layer | np.ndarray) -> np.ndarray:
         result = self.rmultiply_by(X)
-
-        if self._activation is None:
-            return result
-        return self._activation(result)
+        return result if self._activation is None else self._activation(result)
 
     def __matmul__(self, other: Layer | np.ndarray) -> np.ndarray:
         return self.multiply_by(other)
