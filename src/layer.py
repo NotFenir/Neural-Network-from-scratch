@@ -2,8 +2,10 @@ from __future__ import annotations
 import numpy as np
 from typing import Callable
 
+from framework_types import ModelPart
 
-class Layer:
+
+class Layer(ModelPart):
     """
     Docstring for Layer
     """
@@ -14,6 +16,7 @@ class Layer:
         )
         self._bias: np.ndarray = np.zeros(output_dim)
         self._activation: Callable = activation
+        self._input_cache: np.ndarray = None
 
     def __call__(self, X: Layer | np.ndarray) -> np.ndarray:
         result = self.rmultiply_by(X)
@@ -40,10 +43,14 @@ class Layer:
     def shape(self) -> tuple:
         return self._weights.shape
 
+    @DeprecationWarning
     def multiply_by(self, other: Layer | np.ndarray) -> np.ndarray:
+        raise NotImplementedError("Should not use this method!")
         if isinstance(other, np.ndarray):
+            self._input_cache = other
             return self._weights @ other
         if isinstance(other, Layer):
+            self._input_cache = other
             return self._weights @ other._weights + other._bias
         raise NotImplementedError(
             "Not implemented Layer's matmul for this specific case"
@@ -51,9 +58,26 @@ class Layer:
 
     def rmultiply_by(self, other: Layer | np.ndarray) -> np.ndarray:
         if isinstance(other, np.ndarray):
+            self._input_cache = other
             return (other @ self._weights) + self._bias
         if isinstance(other, Layer):
+            self._input_cache = other
             return (other._weights @ self._weights) + self._bias
         raise NotImplementedError(
             "Not implemented Layer's rmatmul for this specific case"
         )
+
+    def gradient_weights(self, dL_dz: np.ndarray | float) -> np.ndarray | float:
+        print(f"dl: {type(dL_dz)} input: {self._input_cache}")
+        return dL_dz * self._input_cache
+
+    def gradient_bias(self, dL_dz: np.ndarray | float) -> np.ndarray | float:
+        return dL_dz
+
+    def calculate_gradient_weights(
+        self, x: np.ndarray | float, dL_dz: np.ndarray | float
+    ) -> np.ndarray | float:
+        return dL_dz * x
+
+    def calculate_gradient_bias(self, dL_dz: np.ndarray | float) -> np.ndarray | float:
+        return dL_dz
