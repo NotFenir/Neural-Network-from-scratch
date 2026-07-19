@@ -1,6 +1,6 @@
 import numpy as np
 
-type Input = np.ndarray | float | list | tuple
+from framework_types import Input
 
 ALLOWED_INPUT_TYPES = Input.__value__.__args__
 
