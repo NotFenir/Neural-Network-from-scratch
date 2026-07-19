@@ -9,7 +9,6 @@ class Layer:
     """
 
     def __init__(self, input_dim: int, output_dim: int, activation: str = None) -> None:
-        super().__init__()
         self._weights: np.ndarray = np.random.randn(input_dim, output_dim) * np.sqrt(
             2 / input_dim
         )
