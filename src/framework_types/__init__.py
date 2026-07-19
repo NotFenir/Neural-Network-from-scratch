@@ -1,3 +1,4 @@
-from .types import Input
+from .types import Input, ModelSequence
+from .class_types import ModelPart
 
-__all__ = ["Input"]
+__all__ = ["Input", "ModelPart", "ModelSequence"]
